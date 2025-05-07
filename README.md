@@ -11,15 +11,22 @@
 - [Constructing Exif Segment](#constructing-exif-segment)
 - [Reference](#reference)
 
+
 # Overview
-- This C library parses the Application Marker Segments of JPEG files to extract metadata.
-- Only standard C library is used.
-- The only assumption is that the machine running the program is little-endian.
+- This library parses the Application Marker Segments of JPEG files to extract metadata.
+- The C version is ready for use.
+- The C++ version is under development.
+
+
+# Note
+For now the library only support little-endian machines.
+
 
 # Prerequisites
 Install the following packages:
 - `gcc`
 - `cmake`
+
 
 # JPEG File Format [^1.1]
 Metadata of a JPEG file is stored in multiple *Application Marker Segments* (**APP**).
@@ -45,6 +52,7 @@ Metadata of a JPEG file is stored in multiple *Application Marker Segments* (**A
 [^1.3]: Unless otherwise stated, all lengths are in bytes
 
 We only care about the information stored in **APP0** (JFIF Segment) and **APP1** (EXIF Segment).
+
 
 ## APP0 [^2.1]
 **APP1** is composed of fields.
@@ -120,11 +128,14 @@ Each **IFD** is composed of multiple *Directory Entries* (**DE**s).
 [^6.1]: Specified in **TIFF Revision 6.0**, pp.14-15
 [^6.2]: If 4 bytes are not enough to hold all the values, this value indicates the offset of the actual values from the first byte of IFH
 
+
 # Workflow
 ![alt text](/assets/flowchart.png)
 
+
 # Constructing Exif Segment
 ![alt text](/assets/flowchart_exif.png)
+
 
 # Reference
 - ISO/IEC 10918-1 (JPEG)
