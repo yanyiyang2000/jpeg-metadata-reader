@@ -19,7 +19,7 @@
 
 
 # Note
-For now the library only support little-endian machines.
+For now the library only supports little-endian machines.
 
 
 # Prerequisites
