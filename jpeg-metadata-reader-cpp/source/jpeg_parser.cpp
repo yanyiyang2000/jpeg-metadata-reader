@@ -4,7 +4,7 @@
 #include <cstdint>    // uint8_t. uint16_t
 #include <cstring>    // memcpy
 #include <fstream>    // ifstream
-#include <ios>        // streampos, streamoff, streamsize
+#include <ios>        // streamsize, streampos, streamoff
 #include <iostream>   // cout
 #include <ostream>    // flush
 #include <stdexcept>  // runtime_error
