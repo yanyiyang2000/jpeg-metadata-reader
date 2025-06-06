@@ -1,0 +1,21 @@
+BasedOnStyle: Google
+
+ColumnLimit: 180
+IndentWidth: 4
+NamespaceIndentation: None
+AccessModifierOffset: -4
+
+AlignAfterOpenBracket: true
+AlignArrayOfStructures: Left
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AlignConsecutiveMacros: true
+AlignTrailingComments: true
+
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+
+BreakConstructorInitializers: AfterColon
