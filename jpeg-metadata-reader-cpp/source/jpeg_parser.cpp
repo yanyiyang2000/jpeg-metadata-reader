@@ -1,6 +1,6 @@
 #include "jpeg_parser.hpp"
 
-#include <bit>        // byteswap
+#include <bit>        // endian, byteswap
 #include <cstdint>    // uint8_t. uint16_t
 #include <cstring>    // memcpy
 #include <fstream>    // ifstream
