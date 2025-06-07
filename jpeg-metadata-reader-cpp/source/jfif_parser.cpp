@@ -1,11 +1,11 @@
 #include "jfif_parser.hpp"
 
-#include <bit>        // endian::native, endian::big, byteswap
+#include <bit>        // endian, byteswap
 #include <cstring>    // memcpy
 #include <fstream>    // ifstream
 #include <ios>        // streampos, streamsize
 #include <memory>     // make_unique, move
-#include <ostream>    // ostream, endl
+#include <ostream>    // ostream
 #include <stdexcept>  // runtime_error
 #include <utility>    // to_underlying
 #include <vector>     // vector
@@ -42,10 +42,10 @@ void jfif::Parser::Parse() {
     ifs_.seekg(seg_base_ + static_cast<std::streamoff>(common::Segment::FieldWidth::kLength));
 
     // Parse and skip the IDENTIFIER field
-    std::vector<char> buf(5);
-    ifs_.read(buf.data(), static_cast<std::streamsize>(Segment::FieldWidth::kIdentifier));
-    if ((static_cast<std::uint8_t>(buf[0]) != 0x4A) | (static_cast<std::uint8_t>(buf[1]) != 0x46) | (static_cast<std::uint8_t>(buf[2]) != 0x49) |
-        (static_cast<std::uint8_t>(buf[3]) != 0x46) | (static_cast<std::uint8_t>(buf[4]) != 0x00)) {
+    std::vector<char> identifier(std::to_underlying(Segment::FieldWidth::kIdentifier));
+    ifs_.read(identifier.data(), static_cast<std::streamsize>(Segment::FieldWidth::kIdentifier));
+    if ((static_cast<std::uint8_t>(identifier[0]) != 0x4A) | (static_cast<std::uint8_t>(identifier[1]) != 0x46) | (static_cast<std::uint8_t>(identifier[2]) != 0x49) |
+        (static_cast<std::uint8_t>(identifier[3]) != 0x46) | (static_cast<std::uint8_t>(identifier[4]) != 0x00)) {
         throw std::runtime_error("Bad JFIF Identifier");
     }
 
