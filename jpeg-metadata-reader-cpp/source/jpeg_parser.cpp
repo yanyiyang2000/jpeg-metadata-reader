@@ -30,11 +30,11 @@ void Parser::Parse() {
         throw std::runtime_error("Failed to open file: " + file_name_);
     }
 
-    std::vector<char> buf(2);
+    std::vector<char> marker(std::to_underlying(common::Segment::FieldWidth::kMarker));
 
     // Parse and skip the MARKER field of SOI Marker Segment
-    ifs.read(buf.data(), static_cast<std::streamsize>(common::Segment::FieldWidth::kMarker));
-    if ((static_cast<std::uint8_t>(buf[0]) != 0xFF) | (static_cast<std::uint8_t>(buf[1]) != std::to_underlying(common::Segment::Marker::kSOI))) {
+    ifs.read(marker.data(), static_cast<std::streamsize>(common::Segment::FieldWidth::kMarker));
+    if ((static_cast<std::uint8_t>(marker[0]) != 0xFF) | (static_cast<std::uint8_t>(marker[1]) != std::to_underlying(common::Segment::Marker::kSOI))) {
         throw std::runtime_error("SOI Marker Segment not found");
     }
 
@@ -42,13 +42,13 @@ void Parser::Parse() {
     /* Process JFIF Marker Segment */
     /*******************************/
 
-    // Parse and skip the MARKER field of the JFIF Marker Segment
-    ifs.read(buf.data(), static_cast<std::streamsize>(common::Segment::FieldWidth::kMarker));
-    if ((static_cast<std::uint8_t>(buf[0]) != 0xFF) | (static_cast<std::uint8_t>(buf[1]) != std::to_underlying(common::Segment::Marker::kJfif))) {
+    // Parse and skip the MARKER field of JFIF Marker Segment
+    ifs.read(marker.data(), static_cast<std::streamsize>(common::Segment::FieldWidth::kMarker));
+    if ((static_cast<std::uint8_t>(marker[0]) != 0xFF) | (static_cast<std::uint8_t>(marker[1]) != std::to_underlying(common::Segment::Marker::kJfif))) {
         throw std::runtime_error("JFIF Marker Segment not found");
     }
 
-    // Anchor the first byte of the LENGTH field of JFIF Marker Segment
+    // Anchor the first byte of the LENGTH field of the JFIF Marker Segment
     std::streampos jfif_seg_base = ifs.tellg();
 
     // Parse and skip the LENGTH field (always in big-endian) of the JFIF Marker Segment
@@ -72,13 +72,13 @@ void Parser::Parse() {
     /* Process Exif Marker Segment */
     /*******************************/
 
-    // Parse and skip the MARKER field of the Exif Marker Segment
-    ifs.read(buf.data(), static_cast<std::streamsize>(common::Segment::FieldWidth::kMarker));
-    if ((static_cast<std::uint8_t>(buf[0]) != 0xFF) | (static_cast<std::uint8_t>(buf[1]) != std::to_underlying(common::Segment::Marker::kExif))) {
+    // Parse and skip the MARKER field of Exif Marker Segment
+    ifs.read(marker.data(), static_cast<std::streamsize>(common::Segment::FieldWidth::kMarker));
+    if ((static_cast<std::uint8_t>(marker[0]) != 0xFF) | (static_cast<std::uint8_t>(marker[1]) != std::to_underlying(common::Segment::Marker::kExif))) {
         throw std::runtime_error("Exif Marker Segment not found");
     }
 
-    // Anchor the first byte of the LENGTH field of Exif Marker Segment
+    // Anchor the first byte of the LENGTH field of the Exif Marker Segment
     std::streampos exif_seg_base = ifs.tellg();
 
     // Parse and skip the LENGTH field (always in big-endian) of the Exif Marker Segment
