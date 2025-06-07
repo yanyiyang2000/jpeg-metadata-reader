@@ -1,7 +1,7 @@
 #include "common.hpp"
 
 #include <fstream>  // ifstream
-#include <iostream>
+#include <ios>      // streampos
 
 namespace lynx::common {
 
