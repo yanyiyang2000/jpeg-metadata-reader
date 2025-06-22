@@ -1,11 +1,11 @@
 #include "common.hpp"
 
-#include <fstream>  // ifstream
-#include <ios>      // streampos
+#include <ios>     // streampos
+#include <string>  // string
 
 namespace lynx::common {
 
-Parser::Parser(std::ifstream& ifs, std::streampos seg_base) : ifs_{ifs}, seg_base_{seg_base} {
+Parser::Parser(std::string file_name, const std::streampos seg_base) : file_name_{file_name}, seg_base_{seg_base} {
 }
 
 }  // namespace lynx::common
