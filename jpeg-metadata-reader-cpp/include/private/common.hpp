@@ -2,9 +2,9 @@
 #define LYNX_COMMON_HPP
 
 #include <cstddef>  // size_t
-#include <cstdint>  // uint8_t
-#include <fstream>  // ifstream
+#include <cstdint>  // uint8_t etc
 #include <ios>      // streampos
+#include <string>   // string
 
 namespace lynx::common {
 
@@ -24,15 +24,31 @@ public:
 
 class Parser {
 protected:
-    std::ifstream& ifs_;
-    std::streampos seg_base_;
+    const std::string    file_name_;
+    const std::streampos seg_base_;
 
 public:
-    Parser(std::ifstream& ifs, std::streampos seg_base);
+    /**
+     * @brief Constructor
+     *
+     * @param `file_name` The name of the image file
+     * @param `seg_base`  The offset of the first byte of the Application Marker Segment from the beginning of the file in bytes
+     */
+    Parser(std::string file_name, const std::streampos seg_base);
 
+    /**
+     * @brief Destructor
+     *
+     * @note This is an explicitly-defaulted destructor.
+     */
     virtual ~Parser() = default;
 
-    virtual void Parse() = 0;  // pure virtual function (implementation depends on derived classes)
+    /**
+     * @brief Parses the Application Marker Segment
+     *
+     * @note This is a pure virtual function, hence the implementation depends on the derived classes.
+     */
+    virtual void Parse() = 0;
 };
 
 }  // namespace lynx::common
