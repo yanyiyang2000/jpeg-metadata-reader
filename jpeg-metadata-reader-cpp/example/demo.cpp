@@ -5,7 +5,8 @@
 
 int main(int argc, char** argv) {
     // Option 1: static allocation
-    lynx::jpeg::Parser  jpeg_parser{argv[1]};
+    // lynx::jpeg::Parser  jpeg_parser{argv[1]};
+    lynx::jpeg::Parser  jpeg_parser{"example/example.jpg"};
     lynx::jpeg::Parser& jpeg_parser_ref{jpeg_parser};
     jpeg_parser_ref.Parse();
 
