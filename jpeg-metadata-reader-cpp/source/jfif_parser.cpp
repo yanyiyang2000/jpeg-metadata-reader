@@ -1,24 +1,17 @@
 #include "jfif_parser.hpp"
 
+#include <array>      // array
 #include <bit>        // endian, byteswap
-#include <cstring>    // memcpy
 #include <fstream>    // ifstream
 #include <ios>        // streampos, streamsize
-#include <memory>     // make_unique, move
 #include <ostream>    // ostream
 #include <stdexcept>  // runtime_error
+#include <string>     // string
 #include <utility>    // to_underlying
-#include <vector>     // vector
 
 #include "common.hpp"
 
 namespace lynx::jfif {
-
-Segment::Segment() {
-}
-
-Segment::~Segment() {
-}
 
 std::ostream &operator<<(std::ostream &os, const Segment &seg) {
     os << "Version Major:                    " << static_cast<unsigned int>(seg.version_major_) << '\n'
@@ -31,64 +24,66 @@ std::ostream &operator<<(std::ostream &os, const Segment &seg) {
     return os;
 }
 
-Parser::Parser(std::ifstream &ifs, std::streampos seg_base) : common::Parser{ifs, seg_base} {
-}
-
-Parser::~Parser() {
+Parser::Parser(std::string file_name, const std::streampos seg_base) : common::Parser{file_name, seg_base} {
 }
 
 void jfif::Parser::Parse() {
-    // Skip the LENGTH field
-    ifs_.seekg(seg_base_ + static_cast<std::streamoff>(common::Segment::FieldWidth::kLength));
+    // Open the file
+    std::ifstream ifs{file_name_, std::ifstream::binary};
+    if (!ifs.is_open()) {
+        throw std::runtime_error("Failed to open file: " + file_name_);
+    }
 
-    // Parse and skip the IDENTIFIER field
-    std::vector<char> identifier(std::to_underlying(Segment::FieldWidth::kIdentifier));
-    ifs_.read(identifier.data(), static_cast<std::streamsize>(Segment::FieldWidth::kIdentifier));
+    // Go to the first byte of the JFIF Marker Segment
+    ifs.seekg(seg_base_);
+
+    // Skip the LENGTH field of the JFIF Marker Segment
+    ifs.seekg(static_cast<std::streamoff>(common::Segment::FieldWidth::kLength), std::ios::cur);
+
+    // Parse and skip the IDENTIFIER field of the JFIF Marker Segment
+    std::array<char, std::to_underlying(Segment::FieldWidth::kIdentifier)> identifier{};
+    ifs.read(identifier.data(), static_cast<std::streamsize>(Segment::FieldWidth::kIdentifier));
     if ((static_cast<std::uint8_t>(identifier[0]) != 0x4A) | (static_cast<std::uint8_t>(identifier[1]) != 0x46) | (static_cast<std::uint8_t>(identifier[2]) != 0x49) |
         (static_cast<std::uint8_t>(identifier[3]) != 0x46) | (static_cast<std::uint8_t>(identifier[4]) != 0x00)) {
         throw std::runtime_error("Bad JFIF Identifier");
     }
 
-    /************************** */
-    /* Construct a JFIF Segment */
-    /************************** */
+    /**********************/
+    /* Parse JFIF Segment */
+    /**********************/
 
-    std::unique_ptr seg = std::make_unique<Segment>();
+    // Parse and skip the VERSION MAJOR field of the JFIF Marker Segment
+    ifs.read(reinterpret_cast<char *>(&seg_.version_major_), static_cast<std::streamsize>(Segment::FieldWidth::kVersionMajor));
 
-    // Parse and skip the VERSION MAJOR field
-    ifs_.read(reinterpret_cast<char *>(&seg->version_major_), static_cast<std::streamsize>(Segment::FieldWidth::kVersionMajor));
+    // Parse and skip the VERSION MINOR field of the JFIF Marker Segment
+    ifs.read(reinterpret_cast<char *>(&seg_.version_minor_), static_cast<std::streamsize>(Segment::FieldWidth::kVersionMajor));
 
-    // Parse and skip the VERSION MINOR field
-    ifs_.read(reinterpret_cast<char *>(&seg->version_minor_), static_cast<std::streamsize>(Segment::FieldWidth::kVersionMajor));
+    // Parse and skip the UNIT field of the JFIF Marker Segment
+    ifs.read(reinterpret_cast<char *>(&seg_.unit_), static_cast<std::streamsize>(Segment::FieldWidth::kUnit));
 
-    // Parse and skip the UNIT field
-    ifs_.read(reinterpret_cast<char *>(&seg->unit_), static_cast<std::streamsize>(Segment::FieldWidth::kUnit));
-
-    // Parse and skip the XDENSITY field (always in big-endian)
-    ifs_.read(reinterpret_cast<char *>(&seg->x_density_), static_cast<std::streamsize>(Segment::FieldWidth::kXDensity));
+    // Parse and skip the XDENSITY field (always in big-endian) of the JFIF Marker Segment
+    ifs.read(reinterpret_cast<char *>(&seg_.x_density_), static_cast<std::streamsize>(Segment::FieldWidth::kXDensity));
     if (std::endian::native != std::endian::big) {
-        seg->x_density_ = std::byteswap(seg->x_density_);
+        seg_.x_density_ = std::byteswap(seg_.x_density_);
     }
 
-    // Parse and skip the YDENSITY field (always in big-endian)
-    ifs_.read(reinterpret_cast<char *>(&seg->y_density_), static_cast<std::streamsize>(Segment::FieldWidth::kYDensity));
+    // Parse and skip the YDENSITY field (always in big-endian) of the JFIF Marker Segment
+    ifs.read(reinterpret_cast<char *>(&seg_.y_density_), static_cast<std::streamsize>(Segment::FieldWidth::kYDensity));
     if (std::endian::native != std::endian::big) {
-        seg->y_density_ = std::byteswap(seg->y_density_);
+        seg_.y_density_ = std::byteswap(seg_.y_density_);
     }
 
-    // Parse and skip the XTHUMBNAIL field (always in big-endian)
-    ifs_.read(reinterpret_cast<char *>(&seg->x_thumbnail_), static_cast<std::streamsize>(Segment::FieldWidth::kXThumbnail));
+    // Parse and skip the XTHUMBNAIL field (always in big-endian) of the JFIF Marker Segment
+    ifs.read(reinterpret_cast<char *>(&seg_.x_thumbnail_), static_cast<std::streamsize>(Segment::FieldWidth::kXThumbnail));
     if (std::endian::native != std::endian::big) {
-        seg->x_thumbnail_ = std::byteswap(seg->x_thumbnail_);
+        seg_.x_thumbnail_ = std::byteswap(seg_.x_thumbnail_);
     }
 
-    // Parse and skip the YTHUMBNAIL field (always in big-endian)
-    ifs_.read(reinterpret_cast<char *>(&seg->y_thumbnail_), static_cast<std::streamsize>(Segment::FieldWidth::kYThumbnail));
+    // Parse and skip the YTHUMBNAIL field (always in big-endian) of the JFIF Marker Segment
+    ifs.read(reinterpret_cast<char *>(&seg_.y_thumbnail_), static_cast<std::streamsize>(Segment::FieldWidth::kYThumbnail));
     if (std::endian::native != std::endian::big) {
-        seg->y_thumbnail_ = std::byteswap(seg->y_thumbnail_);
+        seg_.y_thumbnail_ = std::byteswap(seg_.y_thumbnail_);
     }
-
-    this->seg_ = std::move(seg);
 }
 
 }  // namespace lynx::jfif
