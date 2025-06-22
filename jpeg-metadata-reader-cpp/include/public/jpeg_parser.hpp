@@ -5,14 +5,31 @@
 
 namespace lynx::jpeg {
 
+/**
+ * @brief JPEG metadata parser
+ */
 class Parser {
-public:
+private:
     const std::string file_name_;
 
+public:
+    /**
+     * @brief Constructor
+     *
+     * @note This is an explicitly-defaulted constructor.
+     */
     Parser(std::string file_name);
 
-    ~Parser();
+    /**
+     * @brief Destructor
+     *
+     * @note This is an explicitly-defaulted destructor.
+     */
+    ~Parser() = default;
 
+    /**
+     * @brief Parses the JPEG metadata.
+     */
     void Parse();
 };
 
