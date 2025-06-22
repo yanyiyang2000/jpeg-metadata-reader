@@ -1,5 +1,5 @@
 add_executable(
-    demo 
+    demo
     demo.cpp
 )
 
@@ -11,7 +11,7 @@ target_link_libraries(
 
 target_include_directories(
     demo
-    PRIVATE
+    PUBLIC
     "${PROJECT_SOURCE_DIR}/include/public"
 )
 
