@@ -1,7 +1,7 @@
 #ifndef LYNX_JPEG_PARSER_HPP
 #define LYNX_JPEG_PARSER_HPP
 
-#include <string>
+#include <string>  // string
 
 namespace lynx::jpeg {
 
