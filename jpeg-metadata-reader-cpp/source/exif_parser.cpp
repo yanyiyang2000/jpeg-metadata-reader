@@ -1,21 +1,20 @@
 #include "exif_parser.hpp"
 
-#include <array>     // array
-#include <bit>       // bit_cast, endian, byteswap
-#include <cstddef>   // size_t
-#include <cstring>   // memcpy
-#include <fstream>   // ifstream
-#include <iomanip>   // setfill, setw
-#include <ios>       // streampos, streamoff
-#include <iostream>  // cout
-#include <memory>    // unique_ptr, make_unique
-#include <mutex>     // lock_guard, mutex
-#include <ostream>   // ostream
-#include <span>      // span
-#include <string>    // string
-#include <thread>    // thread
-#include <utility>   // to_underlying
-#include <vector>    // vector
+#include <array>    // array
+#include <bit>      // bit_cast, byteswap, endian
+#include <cstddef>  // size_t
+#include <fstream>  // ifstream
+#include <iomanip>  // setfill, setw
+#include <ios>      // dec, hex, ios, streamoff, streamsize
+#include <iosfwd>   // streampos
+#include <memory>   // unique_ptr, make_unique
+#include <mutex>    // lock_guard, mutex
+#include <ostream>  // ostream
+#include <span>     // span
+#include <string>   // string
+#include <thread>   // thread
+#include <utility>  // move, to_underlying
+#include <vector>   // vector
 
 #include "common.hpp"
 
@@ -35,8 +34,9 @@ std::ostream& operator<<(std::ostream& os, const Segment& seg) {
 }
 
 std::ostream& operator<<(std::ostream& os, const DirectoryEntry& de) {
-    os << "Tag: 0x" << std::uppercase << std::setfill('0') << std::setw(4) << std::hex << de.tag_ << std::dec << " Type: " << std::setfill(' ') << std::setw(2) << de.value_type
-       << " Count: " << std::setfill(' ') << std::setw(4) << de.value_count << " Values: ";
+    os << "Tag: 0x" << std::uppercase << std::setfill('0') << std::setw(4) << std::hex << de.tag_ << std::dec
+       << " Type: " << std::setfill(' ') << std::setw(2) << de.value_type << " Count: " << std::setfill(' ')
+       << std::setw(4) << de.value_count << " Values: ";
 
     std::span<const char> values(de.values_);
     switch (de.value_type) {
@@ -86,8 +86,8 @@ void Parser::Parse() {
     // Parse and skip the IDENTIFIER field of the Exif Marker Segment
     std::array<char, Segment::FieldWidth::Identifier> identifier_buf{};
     ifs.read(identifier_buf.data(), identifier_buf.size());
-    if ((identifier_buf[0] != 0x45) | (identifier_buf[1] != 0x78) | (identifier_buf[2] != 0x69) | (identifier_buf[3] != 0x66) | (identifier_buf[4] != 0x00) |
-        (identifier_buf[5] != 0x00)) {
+    if ((identifier_buf[0] != 0x45) || (identifier_buf[1] != 0x78) || (identifier_buf[2] != 0x69) ||
+        (identifier_buf[3] != 0x66) || (identifier_buf[4] != 0x00) || (identifier_buf[5] != 0x00)) {
         throw std::runtime_error("Bad Exif Identifier");
     }
 

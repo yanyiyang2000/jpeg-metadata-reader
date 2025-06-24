@@ -1,9 +1,10 @@
 #include "jfif_parser.hpp"
 
 #include <array>      // array
-#include <bit>        // endian, byteswap
+#include <bit>        // byteswap, endian
 #include <fstream>    // ifstream
-#include <ios>        // streampos, streamsize
+#include <ios>        // ios, streamoff, streamsize
+#include <iosfwd>     // streampos
 #include <ostream>    // ostream
 #include <stdexcept>  // runtime_error
 #include <string>     // string
@@ -43,8 +44,8 @@ void jfif::Parser::Parse() {
     // Parse and skip the IDENTIFIER field of the JFIF Marker Segment
     std::array<char, std::to_underlying(Segment::FieldWidth::kIdentifier)> identifier{};
     ifs.read(identifier.data(), static_cast<std::streamsize>(Segment::FieldWidth::kIdentifier));
-    if ((static_cast<std::uint8_t>(identifier[0]) != 0x4A) | (static_cast<std::uint8_t>(identifier[1]) != 0x46) | (static_cast<std::uint8_t>(identifier[2]) != 0x49) |
-        (static_cast<std::uint8_t>(identifier[3]) != 0x46) | (static_cast<std::uint8_t>(identifier[4]) != 0x00)) {
+    if ((static_cast<std::uint8_t>(identifier[0]) != 0x4A) || (static_cast<std::uint8_t>(identifier[1]) != 0x46) || (static_cast<std::uint8_t>(identifier[2]) != 0x49) ||
+        (static_cast<std::uint8_t>(identifier[3]) != 0x46) || (static_cast<std::uint8_t>(identifier[4]) != 0x00)) {
         throw std::runtime_error("Bad JFIF Identifier");
     }
 
