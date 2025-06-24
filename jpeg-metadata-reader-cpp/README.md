@@ -1,3 +1,14 @@
+# Prerequisites
+Make sure the following commands are available:
+- `make`
+- `cmake`
+- `gcc`
+- `clang`
+
+> [!NOTE]
+> Sometimes `libc++` (Clang C++ standard library) and `libstdc++` (GCC C++ standard library) don't ship with the compiler, install them if necessary.
+
+
 # Overview
 | Directory |                 Comment                 |
 | --------- | --------------------------------------- |
@@ -7,29 +18,29 @@
 
 
 # Building
-In the project root directory, use one of the following commands to configure build type:
-```bash
-cmake -D CMAKE_BUILD_TYPE=Debug -B build .
+In the project root directory, run the `build.sh` script to build the library and demo program.
 
-cmake -D CMAKE_BUILD_TYPE=Release -B build .
-```
-In the project root directory, use the following commands to build:
-```bash
-cmake --build ./build
-```
+> [!NOTE]
+> Modify the `BUILD_TYPE` variable in the script for debug or release build. The default build type is `Debug`.
 
 
 # Installing
-In the `build` directory, use the following command to install the executable:
-```bash
-make install
-```
+The `build.sh` script will install the demo program in the `example` directory.
 
 
 # Running
-In the `example` directory, use the following command to run the executable:
-```bash
-./demo <FILE_NAME_WITH_EXTENSION>
+In the project root directory, use the following command to run the demo program:
+```shell
+example/demo
+```
+
+
+# Misc
+Use the following commands to dump the predefined macros of GCC or Clang:
+```shell
+echo | gcc -std=c++23 -dM -E -x c++ -
+
+echo | clang -std=c++23 -dM -E -x c++ -
 ```
 
 
@@ -51,9 +62,10 @@ In the `example` directory, use the following command to run the executable:
 - C++17:
     - nested namespace
 - C++20:
+    - `std::bit_cast` from `<bit>`
     - `std::endian` from `<bit>`
     - `std::span` from `<span>`
-    - `std::bit_cast` from `<bit>`
 - C++23:
+    - fixed width floating point types
     - `std::byte_swap()` from `<bit>`
     - `std::to_underlying()` from `<utility>`
