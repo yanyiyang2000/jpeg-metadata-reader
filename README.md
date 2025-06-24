@@ -7,8 +7,8 @@
     - [IFH](#ifh)
     - [IFD](#ifd)
     - [DE](#de)
-- [Workflow](#workflow)
-- [Constructing Exif Segment](#constructing-exif-segment)
+- [Parsing JPEG file](#parsing-jpeg-file)
+- [Parsing Exif Segment](#parsing-exif-segment)
 - [Reference](#reference)
 
 
