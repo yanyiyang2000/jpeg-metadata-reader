@@ -3,7 +3,7 @@
 
 #include <cstddef>  // size_t
 #include <cstdint>  // uint8_t etc
-#include <ios>      // streampos
+#include <iosfwd>   // streampos
 #include <string>   // string
 
 namespace lynx::common {

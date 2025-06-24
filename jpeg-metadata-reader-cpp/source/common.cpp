@@ -1,6 +1,6 @@
 #include "common.hpp"
 
-#include <ios>     // streampos
+#include <iosfwd>  // streampos
 #include <string>  // string
 
 namespace lynx::common {
