@@ -1,6 +1,6 @@
 BasedOnStyle: Google
 
-ColumnLimit: 180
+ColumnLimit: 120
 IndentWidth: 4
 NamespaceIndentation: None
 AccessModifierOffset: -4
