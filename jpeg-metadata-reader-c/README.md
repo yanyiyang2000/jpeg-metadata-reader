@@ -1,3 +1,10 @@
+# Prerequisites
+Make sure the following commands are available:
+- `make`
+- `cmake`
+- `gcc`
+
+
 # Overview
 | Directory |                 Comment                 |
 | --------- | --------------------------------------- |
@@ -20,9 +27,9 @@ cmake --build ./build
 
 
 # Installing
-In the `build` directory, use the following command to install the executable:
+In the project root directory, use the following command to install the executable:
 ```bash
-make install
+make -C build install
 ```
 
 
