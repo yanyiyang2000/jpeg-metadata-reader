@@ -14,18 +14,8 @@
 
 # Overview
 - This library parses the Application Marker Segments of JPEG files to extract metadata.
-- The C version is ready for use.
+- The C version is ready for use. (only little-endian machines are supported for now)
 - The C++ version is currently under development.
-
-
-# Note
-For now the library only supports little-endian machines.
-
-
-# Prerequisites
-Install the following packages:
-- `gcc`
-- `cmake`
 
 
 # JPEG File Format
@@ -142,11 +132,11 @@ A DE is composed of the following fields:
 [^6.1]: If 4 bytes are not enough to hold all the values, this value indicates the offset of the actual values from the first byte of IFH
 
 
-# Workflow
+# Parsing JPEG file
 <img src="/assets/flowchart.png" width=50% height=50%>
 
 
-# Constructing Exif Segment
+# Parsing Exif Segment
 <img src="/assets/flowchart_exif.png" width=50% height=50%>
 
 
