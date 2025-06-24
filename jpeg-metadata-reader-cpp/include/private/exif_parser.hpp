@@ -1,14 +1,16 @@
 #ifndef LYNX_EXIF_PARSER_HPP
 #define LYNX_EXIF_PARSER_HPP
 
-#include <cstddef>  // size_t
-#include <cstdint>  // uint8_t etc
-#include <ios>      // streampos
-#include <memory>   // unique_ptr
-#include <mutex>    // mutex
-#include <ostream>  // ostream
-#include <string>   // string
-#include <vector>   // vector
+#include <bit>       // endian
+#include <cstddef>   // size_t
+#include <cstdint>   // uint8_t etc
+#include <iosfwd>    // streampos
+#include <memory>    // unique_ptr
+#include <mutex>     // mutex
+#include <ostream>   // ostream
+#include <stdfloat>  // float32_t, float64_t
+#include <string>    // string
+#include <vector>    // vector
 
 #include "common.hpp"
 
@@ -59,18 +61,18 @@ public:
     };
 
     struct ValueType {
-        using Byte           = std::uint8_t;   // 8-bit unsigned integer
-        using SignedByte     = std::int8_t;    // 8-bit signed integer
-        using Ascii          = char8_t;        // 8-bit byte that contains a 7-bit ASCII code; the last byte must be NULL
-        using Undefined      = std::int8_t;    // 8-bit byte that may contain anything, depending on the definition of the field
-        using Short          = std::uint16_t;  // 16-bit unsigned integer
-        using SignedShort    = std::int16_t;   // 16-bit signed integer
-        using Long           = std::uint32_t;  // 32-bit unsigned integer
-        using SignedLong     = std::int32_t;   // 32-bit signed integer
-        using Rational       = std::uint32_t;  // Two Long's: the first represents the numerator of a fraction, the second the denominator
-        using SignedRational = std::int32_t;   // Two SignedLong's: the first represents the numerator of a fraction, the second the denominator
-        using Float          = float;          // Single precision IEEE format
-        using Double         = double;         // Double precision IEEE format
+        using Byte           = std::uint8_t;    // 8-bit unsigned integer
+        using SignedByte     = std::int8_t;     // 8-bit signed integer
+        using Ascii          = char8_t;         // 8-bit byte that contains a 7-bit ASCII code; the last byte must be NULL
+        using Undefined      = std::int8_t;     // 8-bit byte that may contain anything, depending on the definition of the field
+        using Short          = std::uint16_t;   // 16-bit unsigned integer
+        using SignedShort    = std::int16_t;    // 16-bit signed integer
+        using Long           = std::uint32_t;   // 32-bit unsigned integer
+        using SignedLong     = std::int32_t;    // 32-bit signed integer
+        using Rational       = std::uint32_t;   // Two Long's: the first represents the numerator of a fraction, the second the denominator
+        using SignedRational = std::int32_t;    // Two SignedLong's: the first represents the numerator of a fraction, the second the denominator
+        using Float          = std::float32_t;  // 32-bit single precision floating point
+        using Double         = std::float64_t;  // 64-bit double precision floating point
     };
 
     enum class ValueWidth : std::size_t {
